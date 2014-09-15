@@ -1,4 +1,4 @@
-// depends: amplitude.js, combinatorics.js
+// depends: amplitude.js, combinatorics.js, utils.js
 
 var particles = 2;
 var box = {
@@ -10,10 +10,7 @@ var box = {
 // Var Constants
 hbar = 1
 
-function init () {
-	var states = {}
-	states.states = [];
-	states.indices = [];
+var System = function (num_particles, box, potential) {
 	var preProduct = []
 	for(var particle = 0; particle < particles; particle++) {
 		var possiblePositions = [];
@@ -22,11 +19,12 @@ function init () {
 		}
 		preProduct.push(possiblePositions)
 	}
-	console.log(preProduct);
-	return cartesianProduct(preProduct);
+	this.states = cartesianProduct(preProduct);
+	this.resolution = box.max_resolution;
+	this.potential = potential
 }
 
-var states = init();
+var states = new System(2, box, {});
 
 //
 var StateFunction = function(states) {
@@ -34,23 +32,39 @@ var StateFunction = function(states) {
 }
 
 var StateFunction.prototype.get = function(state) {
-	for(var i = 0)
+	var index = this.computeIndex(state);
+
+	if(index === undefined) {
+		return 0;
+	}
+
+	return this.amplitudes[index];
 }
 
 var StateFunction.prototype.set = function(state, amplitude) {
-	return amplitude;
+	var StateFunction.prototype.get = function(state) {
+	var index = this.computeIndex(state);
+
+	if(index === undefined) {
+		return;
+	}
+
+	this.amplitudes[index] = amplitude;
 }
 
 var WaveFunction = StateFunction;
 
 var secondDerivative = function(fx, fx_minus_h, fx_plus_h, dx)  {
-	// f(x + h) - 2
+	// [ f(x+h) - 2f(x) + f(x-h) ]/ dx^2
 	return fx_minus_h.add(fx.multiply(-2)).add(fx_plus_h).multiply(1/(dx*dx))
 }
 
-var Hamiltonian = function(wavefunction, potential) {
-	StateFunction.apply(this, [wavefunction.states]);
+var Hamiltonian = function (system) {
+	StateFunction.apply(this, [system.states]);
+	this.system = system; // Grab potential and resolution.
+}
 
+var Hamiltonian.prototype.update = function(wavefunction) {
 	for(var state_id = 0; state_id < wavefunction.states.length; state_id++) {
 		var state = wavefunction.interior_states[state_id];
 		for(var particle_id = 0; particle_id < wavefunction.particles.length; particle_id++) {
@@ -62,16 +76,16 @@ var Hamiltonian = function(wavefunction, potential) {
 			// They refer to the state in the which have the current particle moved -dx and +dx
 			// respectively. If these states are not in set of states, they are assumed to be boundary states
 			// and thus will have amplitude of zero.
-			var prev_state = state.slice(0, particle).concat([state[particle]-1])
+			var prev_state = ArrayUtils.addedIndex(state, particle_id, -1);
 			var previous_state_amplitude = wavefunction.get(prev_state);
-			var next_state = state.slice(0, particle).concat([state[particle]+1])
+			var next_state = ArrayUtils.addedIndex(state, particle_id, 1);
 			var next_state_amplitude = wavefunction.states.get(next_state);
 
-			// TODO: Nice solution for this.states.resolution
+			// TODO: Correct solution for this.states.resolution. Currently, I'm cheating.
 			// Compute Energy Amplitude Terms
 			var kineticAmplitude = (-hbar/(particle.mass*2)) * 
-				secondDerivative(this_state_amplitude, previous_state_amplitude, next_state_amplitude, 1/this.states.resolution);
-			var potentialAmplitude = center_state_amplitude.multiply(potential(state)); // V(x)*Psi(x)
+				secondDerivative(this_state_amplitude, previous_state_amplitude, next_state_amplitude, 1/this.system.resolution);
+			var potentialAmplitude = center_state_amplitude.multiply(this.system.potential(state)); // V(x)*Psi(x)
 
 			// H = K + V
 			this.set(state, kineticAmplitude.add(potentialAmplitude));
@@ -79,9 +93,11 @@ var Hamiltonian = function(wavefunction, potential) {
 	}
 }
 
-function schroedingerStep(wavefunction, potential) {
+var hamiltonian = new Hamiltonian(system);
+
+function schroedingerStep(wavefunction, system) {
 	nextWaveFunction = new WaveFunction(state);
-	var hamiltonian = new Hamiltonian(wavefunction, potential);
+	hamiltonian.update(wavefunction);
 	// Go over all interior states (boundary states never change, they're always zero)
 	for(var i = 0; i < wavefunction.states.length; i++) {
 		var state = states[i];
