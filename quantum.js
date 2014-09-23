@@ -24,7 +24,7 @@ var System = function (num_particles, box, potential) {
     this.potential = potential
 }
 
-var states = new System(2, box, {});
+var system = new System(2, box, {});
 
 //
 var StateFunction = function(states) {
@@ -58,7 +58,7 @@ var secondDerivative = function(fx, fx_minus_h, fx_plus_h, dx)  {
     return fx_minus_h.add(fx.multiply(-2)).add(fx_plus_h).multiply(1/(dx*dx))
 }
 
-var Hamiltonian = function (system) {
+var Hamiltonian = function (System) {
     StateFunction.apply(this, [system.states]);
     this.system = system; // Grab potential and resolution.
 }
