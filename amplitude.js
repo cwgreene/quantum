@@ -36,6 +36,3 @@ Amplitude.prototype.equals = function(amplitude) {
 var I = new Amplitude(0,1); // Sqrt(-1)
 var U = new Amplitude(1,0); // Unity
 
-// Unit Tests
-I.multiply(I).equals(-1);
-I.multiply(I).multiply(I).equals(I.multiply(-1));

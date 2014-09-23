@@ -6,3 +6,4 @@ ArrayUtils.alteredIndex = function(array, index, replacement) {
 ArrayUtils.addedIndex = function(array, index, increment) {
     return ArrayUtils.alterdIndex(array, index, array[index] + increment);
 }
+

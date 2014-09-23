@@ -31,7 +31,7 @@ var StateFunction = function(states) {
     this.amplitudes = []
 }
 
-var StateFunction.prototype.get = function(state) {
+StateFunction.prototype.get = function(state) {
     var index = this.computeIndex(state);
 
     if(index === undefined) {
@@ -41,8 +41,7 @@ var StateFunction.prototype.get = function(state) {
     return this.amplitudes[index];
 }
 
-var StateFunction.prototype.set = function(state, amplitude) {
-    var StateFunction.prototype.get = function(state) {
+StateFunction.prototype.set = function(state, amplitude) {
     var index = this.computeIndex(state);
 
     if(index === undefined) {
@@ -64,7 +63,7 @@ var Hamiltonian = function (system) {
     this.system = system; // Grab potential and resolution.
 }
 
-var Hamiltonian.prototype.update = function(wavefunction) {
+Hamiltonian.prototype.update = function(wavefunction) {
     for(var state_id = 0; state_id < wavefunction.states.length; state_id++) {
         var state = wavefunction.interior_states[state_id];
         for(var particle_id = 0; particle_id < wavefunction.particles.length; particle_id++) {
@@ -110,3 +109,4 @@ function schroedingerStep(wavefunction, system) {
 }
 
 // [(0,0), (0,1), (1,0)]
+

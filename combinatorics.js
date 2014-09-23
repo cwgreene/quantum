@@ -14,3 +14,4 @@ function cartesianProduct(arrays) {
     }
     return result;
 }
+
