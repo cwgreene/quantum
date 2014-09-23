@@ -8,7 +8,7 @@ function cartesianProduct(arrays) {
     for(var i = 0; i < current_array.length; i++) {
         for(var j = 0; j < subproduct.length; j++ ) {
             var new_array = subproduct[j].slice(0,subproduct.length);
-            new_array.push(current_array[i]);
+            new_array.unshift(current_array[i]);
             result.push(new_array)
         }
     }
