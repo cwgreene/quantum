@@ -1,12 +1,4 @@
 // depends: amplitude.js, combinatorics.js, utils.js
-
-var particles = 2;
-var box = {
-    "max_resolution" : 10,
-    "min_x" : -3,
-    "max_x" : 3
-}
-
 // Var Constants
 hbar = 1
 
@@ -23,9 +15,6 @@ var System = function (num_particles, box, potential) {
     this.resolution = box.max_resolution;
     this.potential = potential
 }
-
-var system = new System(2, box, {});
-
 //
 var StateFunction = function(states) {
     this.amplitudes = []
@@ -92,7 +81,6 @@ Hamiltonian.prototype.update = function(wavefunction) {
     }
 }
 
-var hamiltonian = new Hamiltonian(system);
 
 function schroedingerStep(wavefunction, system) {
     nextWaveFunction = new WaveFunction(state);
