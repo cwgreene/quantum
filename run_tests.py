@@ -1,6 +1,10 @@
+#!/usr/bin/env python
 import os
 import re
 import sys
+import subprocess
+
+import colorama
 
 def get_base_name(filename):
     """ example.unittest.js => example.js
@@ -37,10 +41,15 @@ for filename in os.listdir("."):
     if "unittest" in filename:
         base_file = get_base_name(filename)
         requirements = list(reversed(get_requirements(base_file)))
-        print filename,":", requirements
+        print filename,":", requirements,
         if not os.path.exists("build"):
             os.mkdir("build")
         os.system("cat %s> build/%s.gen.js" % 
             (" ".join(requirements + [filename]), base_file))
-        os.system("node build/%s" % (base_file+".gen.js"))
-
+        try:
+            subprocess.check_call(["node", "build/%s" % (base_file+".gen.js")])
+            print colorama.Fore.GREEN + "Success!" + colorama.Fore.RESET
+        except subprocess.CalledProcessError as C:
+            print colorama.Fore.RED + "Failure" + colorama.Fore.RESET
+            print C
+        

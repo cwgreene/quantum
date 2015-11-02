@@ -10,5 +10,4 @@ var system = new System(2, box, {});
 var hamiltonian = new Hamiltonian(system);
 
 for(var state in system.states) {
-    console.log(system.states[state])
 }
