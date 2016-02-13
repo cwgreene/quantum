@@ -7,6 +7,7 @@ Amplitude.prototype.add = function(amplitude) {
     var newAmplitude = new Amplitude(0,0);
     if (typeof(amplitude) === "number") {
         newAmplitude.real = this.real + amplitude;
+        newAmplitude.imag = this.imag;
     } else {
         newAmplitude.real = this.real + amplitude.real;
         newAmplitude.imag = this.imag + amplitude.imag;

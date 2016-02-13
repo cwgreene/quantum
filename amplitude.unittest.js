@@ -4,6 +4,7 @@ var assert = require('assert')
 
 // Add
 assert(I.multiply(2).equals(I.add(I)))
+assert(I.add(1).equals(new Amplitude(1,1)))
 
 // Multiply
 assert(I.multiply(I).equals(-1));
