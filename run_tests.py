@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import os
+import shutil
 import re
 import sys
 import subprocess
@@ -36,6 +37,9 @@ def get_requirements(filename, dependency_list = None, file_set = None):
             if dependency not in file_set:
                 get_requirements(dependency, dependency_list, file_set)
         return dependency_list
+
+# install git hooks.
+shutil.copyfile("./githooks/pre-push", "./.git/hooks/pre-push")
 
 for filename in os.listdir("."):
     if "unittest" in filename:

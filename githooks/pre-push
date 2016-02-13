@@ -1,12 +1,24 @@
 #!/usr/bin/env python
 import sys
+import subprocess
+
+def gitcall(args):
+    return subprocess.check_output(["git"] + args.split(" "))
+
+def do_checks(local_ref, local_sha, remote_ref, remote_sha):
+    body = gitcall("log --format=%%B -n 1 %s" % local_sha)
+    if not body.startswith("QUANTUM-"):
+        print "Malformed commit message, must start with QUANTUM-"
+        sys.exit(1)
 
 variables = sys.stdin.read()
 if not variables: # Everything up to date
     sys.exit(0)
 local_ref, local_sha, remote_ref, remote_sha = variables.split()
 
+if list(set(local_sha)) == ["0"]:
+    # Deleting remote branch
+    sys.exit(0)
 if remote_ref.split("/")[-1] == "master":
-    do_checks()
-else:
-    print "Not submitting to master branch, have fun!"
+    # only do checks on push to master.
+    do_checks(local_ref, local_sha, remote_ref, remote_sha)
