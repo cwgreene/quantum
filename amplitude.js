@@ -5,11 +5,11 @@ var Amplitude = function(real, imag) {
 
 Amplitude.prototype.add = function(amplitude) {
     var newAmplitude = new Amplitude(0,0);
-    if (typeof(amplitude) == "number") {
+    if (typeof(amplitude) === "number") {
         newAmplitude.real = this.real + amplitude;
     } else {
-        newAmplitude = this.real + amplitude.real;
-        newAmplitude = this.imag + amplitude.imag;
+        newAmplitude.real = this.real + amplitude.real;
+        newAmplitude.imag = this.imag + amplitude.imag;
     }
     return newAmplitude;
 }
@@ -42,13 +42,43 @@ Amplitude.prototype.angle = function() {
     } else if (this.real > 0 && this.imag < 0) {
         return atan + 2*Math.PI;
     }
-    return atan; // first qudrant
+    return atan; // first quadrant
+}
+
+Amplitude.prototype.conj = function() {
+    return new Amplitude(this.real, -this.imag);
+}
+
+Amplitude.prototype.inverse = function() {
+    var r = this.radius();
+    var r2 = r*r;
+    return new Amplitude(this.real/r2, -this.imag/r2);
+}
+
+Amplitude.prototype.radius = function() {
+    return Math.sqrt(this.real*this.real + this.imag*this.imag);
 }
 
 Amplitude.prototype.exponentiate = function(amplitude) {
-    var r = Math.exp(amplitude.real);
-    var newAmplitude = new Amplitude(r*Math.cos(amplitude.imag), r*Math.sin(amplitude.imag));
+    if (typeof(amplitude) === "number") {
+        var amplitude = new Amplitude(amplitude, 0);
+    }
+    var this_r = this.radius();
+    var this_theta = this.angle();
+    var theta = amplitude.real * this_theta;
+    var r = this_r * Math.exp(-this_theta*amplitude.imag)
+    var newAmplitude = (new Amplitude(
+            r*Math.cos(theta),
+            r*Math.sin(theta)));
     return newAmplitude;
+}
+
+Amplitude.prototype.almostEquals = function(amplitude) {
+    if (typeof(amplitude) === "number") {
+        amplitude = new Amplitude(amplitude, 0);
+    }
+    var diff = this.add(amplitude.multiply(-1));
+    return diff.radius() < .0000001
 }
 
 var I = new Amplitude(0,1); // Sqrt(-1)
