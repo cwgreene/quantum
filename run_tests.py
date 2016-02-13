@@ -52,4 +52,4 @@ for filename in os.listdir("."):
         except subprocess.CalledProcessError as C:
             print colorama.Fore.RED + "Failure" + colorama.Fore.RESET
             print C
-        
+        subprocess.check_call(["istanbul", "cover", "build/%s" % (base_file+".gen.js")])
