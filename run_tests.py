@@ -44,12 +44,25 @@ shutil.copyfile("./githooks/pre-push", "./.git/hooks/pre-push")
 for filename in os.listdir("."):
     if "unittest" in filename:
         base_file = get_base_name(filename)
+        # The following is wrong, we should topo sort the graph,
+        # which means, we should also probably build a graph.
         requirements = list(reversed(get_requirements(base_file)))
         print filename,":", requirements,
         if not os.path.exists("build"):
             os.mkdir("build")
+        final_requirements = requirements[:]
+
+        # Add in unittests of dependencies.
+        # Unfortunately, this means that we're going to run
+        # tests multiple times. Better solution is being
+        # investigated.
+        for afile in requirements:
+            basename = afile.split(".")[0]
+            unittestname=basename+".unittest.js"
+            if os.path.exists(unittestname):
+                final_requirements.append(unittestname)
         os.system("cat %s> build/%s.gen.js" % 
-            (" ".join(requirements + [filename]), base_file))
+            (" ".join(final_requirements + [filename]), base_file))
         try:
             subprocess.check_call(["node", "build/%s" % (base_file+".gen.js")])
             print colorama.Fore.GREEN + "Success!" + colorama.Fore.RESET
