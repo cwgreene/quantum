@@ -79,7 +79,7 @@ Amplitude.prototype.almostEquals = function(amplitude) {
         amplitude = new Amplitude(amplitude, 0);
     }
     var diff = this.add(amplitude.multiply(-1));
-    return diff.radius() < .0000001
+    return diff.radius() < .0001;
 }
 
 var I = new Amplitude(0,1); // Sqrt(-1)

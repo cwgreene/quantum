@@ -11,3 +11,10 @@ var hamiltonian = new Hamiltonian(system);
 
 for(var state in system.states) {
 }
+
+var dx = .00001;
+
+assert(secondDerivative(Math.cos(0), Math.cos(-dx),  Math.cos(dx), dx).almostEquals(-1));
+assert(secondDerivative(new Amplitude(Math.cos(0), 0),
+        new Amplitude(Math.cos(-dx), 0),
+        new Amplitude(Math.cos(dx), 0), dx).almostEquals(-1));

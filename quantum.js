@@ -43,6 +43,15 @@ StateFunction.prototype.set = function(state, amplitude) {
 var WaveFunction = StateFunction;
 
 var secondDerivative = function(fx, fx_minus_h, fx_plus_h, dx)  {
+    if (typeof(fx) === "number") {
+        fx = new Amplitude(fx, 0);
+    }
+    if (typeof(fx_minus_h) === "number") {
+        fx_minus_h = new Amplitude(fx_minus_h, 0);
+    }
+    if (typeof(fx_plus_h) === "number") {
+        fx_plus_h = new Amplitude(fx_plus_h, 0);
+    }
     // [ f(x+h) - 2f(x) + f(x-h) ]/ dx^2
     return fx_minus_h.add(fx.multiply(-2)).add(fx_plus_h).multiply(1/(dx*dx))
 }
