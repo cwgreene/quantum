@@ -4,7 +4,7 @@ hbar = 1
 
 var System = function (num_particles, box, potential) {
     var preProduct = []
-    for(var particle = 0; particle < particles; particle++) {
+    for(var particle = 0; particle < num_particles; particle++) {
         var possiblePositions = [];
         for(var particle_x = 0; particle_x < box.max_resolution; particle_x += 1) {
             possiblePositions.push(particle_x);
@@ -14,7 +14,9 @@ var System = function (num_particles, box, potential) {
     this.states = cartesianProduct(preProduct);
     this.resolution = box.max_resolution;
     this.potential = potential
+    this.geometry = box;
 }
+
 //
 var StateFunction = function(states) {
     this.amplitudes = []
