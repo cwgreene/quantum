@@ -63,10 +63,14 @@ for filename in os.listdir("."):
                 final_requirements.append(unittestname)
         os.system("cat %s> build/%s.gen.js" % 
             (" ".join(final_requirements + [filename]), base_file))
+        test_file = base_file + ".gen.js"
         try:
-            subprocess.check_call(["node", "build/%s" % (base_file+".gen.js")])
+            subprocess.check_call(["node", "build/%s" % (test_file)])
             print colorama.Fore.GREEN + "Success!" + colorama.Fore.RESET
         except subprocess.CalledProcessError as C:
             print colorama.Fore.RED + "Failure" + colorama.Fore.RESET
             print C
-        subprocess.check_call(["istanbul", "cover", "build/%s" % (base_file+".gen.js")])
+        coverage_dir = "%s_coverage" % test_file
+        coverage_file = "%s/coverage.json" % coverage_dir
+        subprocess.check_call(["istanbul", "cover", "build/%s" % (test_file), "--dir", coverage_dir])
+        subprocess.check_call(["istanbul", "report", "html", "--dir", coverage_dir, "--include", coverage_file])
