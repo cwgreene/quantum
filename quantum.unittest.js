@@ -1,16 +1,22 @@
 /* One Dimensional System */
-var particles = 1;
 var box = {
     "max_resolution" : 10,
     "min_x" : -3,
     "max_x" : 3   
 }
 
+var box_small = {
+    "max_resolution" : 5,
+    "min_x" : -3,
+    "max_x" : 3
+}
+
+assert(new System(2, box, {}).states.length==100)
+assert(new System(3, box, {}).states.length==1000)
+assert(new System(3, box_small, {}).states.length==125)
+
 var system = new System(2, box, {});
 var hamiltonian = new Hamiltonian(system);
-
-for(var state in system.states) {
-}
 
 var dx = .00001;
 
