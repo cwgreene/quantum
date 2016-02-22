@@ -17,9 +17,39 @@ var System = function (num_particles, box, potential) {
     this.geometry = box;
 }
 
+// A wave function is a state function that gives you
+// amplitudes of other states (which we'll typically
+// take as time invariant states (that is, eigenstates of
+// the Hamiltonian). I recognize that we're looking at this
+// oddly, but let's see where this goes. We're thinking of a
+// wave function less like an object in hilbert space, but rather,
+// this thing that gives you the amplitude of another state.
 //
+// In this perspective, we're thinking of wavefunctions not as superposition
+// of states, but as objects that tell you the outcome of measurements (which
+// are the actual states, because we know what it means to say the particle is
+// in State X, but not necessarily what it means to be in a*State X + b*State Y).
+// I suspect that looking at things this way might make explaining Heisenburg's
+// Uncertainty Principle harder.
 var StateFunction = function(states) {
-    this.amplitudes = []
+    this.amplitudes = [];
+    for (var i = 0; i < states.length; i++) {
+        var state_amp = states[i];
+        var state = state_amp[0];
+        var amp = state_amp[1];
+        this.amplitudes[this.computeIndex(state)] = amp;
+    }
+    // TODO: Normalize all wave amplitudes.
+}
+
+// This is slow, and probably wrong.
+// However, it does give some suggestion as to what our
+// "States" look like.
+// TODO: Ensure that if two states are the same, they always
+// have the same index. Until then, our states will need to
+// be ordered arrays.
+StateFunction.prototype.computeIndex = function(state) {
+    return JSON.stringify(state);
 }
 
 StateFunction.prototype.get = function(state) {
@@ -59,7 +89,7 @@ var secondDerivative = function(fx, fx_minus_h, fx_plus_h, dx)  {
 }
 
 var Hamiltonian = function (System) {
-    StateFunction.apply(this, [system.states]);
+    // `StateFunction.apply(this, [system.states]); // I have no idea what this is supposed to do.
     this.system = system; // Grab potential and resolution.
 }
 
@@ -106,6 +136,3 @@ function schroedingerStep(wavefunction, system) {
 
     return nextWaveFunction
 }
-
-// [(0,0), (0,1), (1,0)]
-

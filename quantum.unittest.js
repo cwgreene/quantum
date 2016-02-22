@@ -24,3 +24,11 @@ assert(secondDerivative(Math.cos(0), Math.cos(-dx),  Math.cos(dx), dx).almostEqu
 assert(secondDerivative(new Amplitude(Math.cos(0), 0),
         new Amplitude(Math.cos(-dx), 0),
         new Amplitude(Math.cos(dx), 0), dx).almostEquals(-1));
+
+// Initial testing, need to flesh out more. Namely, these will fail
+// once wavefunction normalizes things properly.
+var wavefunction = new StateFunction([[[0,0], 1], [[0,1], 1], [[1,0], 1], [[1,1], 1]])
+assert(wavefunction.get([0,0]) == 1)
+assert(wavefunction.get([0,1]) == 1)
+assert(wavefunction.get([1,0]) == 1)
+assert(wavefunction.get([1,1]) == 1)
