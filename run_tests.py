@@ -7,13 +7,6 @@ import subprocess
 
 import colorama
 
-def get_base_name(filename):
-    """ example.unittest.js => example.js
-        :type filename: str
-    """
-    index = filename.index(".unittest.js")
-    return filename[:index] + ".js"
-
 # install git hooks.
 shutil.copyfile("./githooks/pre-push", "./.git/hooks/pre-push")
 
