@@ -26,3 +26,7 @@ So to present in a clear way Quantum Mechanics, we adopt the following:
     to switch to another basis in a clean, clear, and explainable manner.
 - Visualizations!
 - Clear walkthrough (tutorial) of the code and philosophy.
+- Decoherence! Seriously, I want a clear, simulation argument as to how
+    this actually works in practice. Some explanations seem to presuppose
+    that thermodynamics happens, and it gets bolted into the system. If
+    this is a necessary assumption, I want to call that out.
