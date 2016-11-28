@@ -96,6 +96,8 @@ var Hamiltonian = function (system) {
     this.system = system; // Grab potential and resolution.
 }
 
+// This function is intended to evaluate the value of the Hamiltonian
+// at the current point in time, given, the wavefunction's current configuration.
 Hamiltonian.prototype.update = function(wavefunction) {
     for(var state_id = 0; state_id < wavefunction.states.length; state_id++) {
         var state = wavefunction.interior_states[state_id];
@@ -108,6 +110,7 @@ Hamiltonian.prototype.update = function(wavefunction) {
             // They refer to the state in the which have the current particle moved -dx and +dx
             // respectively. If these states are not in set of states, they are assumed to be boundary states
             // and thus will have amplitude of zero.
+            // TODO: This seems to only make sense when our system is in one dimension. :(
             var prev_state = utils.ArrayUtils.addedIndex(state, particle_id, -1);
             var previous_state_amplitude = wavefunction.get(prev_state);
             var next_state = utils.ArrayUtils.addedIndex(state, particle_id, 1);
@@ -125,7 +128,8 @@ Hamiltonian.prototype.update = function(wavefunction) {
     }
 }
 
-
+// Time Step evolution of the system
+// Should probably be a method on System.
 function schroedingerStep(wavefunction, system) {
     nextWaveFunction = new WaveFunction(state);
     hamiltonian.update(wavefunction);
@@ -141,8 +145,11 @@ function schroedingerStep(wavefunction, system) {
 }
 
 module.exports = {
+    // The core objects here are the System
+    // and the Hamiltonian.
     System: System,
     Hamiltonian: Hamiltonian,
-    secondDerivative: secondDerivative,
-    StateFunction: StateFunction
+    secondDerivative: secondDerivative, // Probably shouldn't be exported directly.
+    StateFunction: StateFunction, // Is this really just an observable?
+    schroedingerStep: schroedingerStep // Make this a method on System
 };
