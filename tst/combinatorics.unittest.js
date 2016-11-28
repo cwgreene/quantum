@@ -1,3 +1,5 @@
+var combinatorics = require('../src/combinatorics.js');
+var cartesianProduct = combinatorics.cartesianProduct;
 var assert = require("assert")
 
 // I'm going to be a bad person and do string comparison here.

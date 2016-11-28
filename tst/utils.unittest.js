@@ -1,3 +1,5 @@
+var utils = require('../src/utils.js');
+var ArrayUtils = utils.ArrayUtils;
 var assert = require('assert');
 
 assert(ArrayUtils.equals(["1"],["1"]))

@@ -1,5 +1,8 @@
 // Unit Tests
-// depends: amplitude.js
+var amplitude = require("../src/amplitude.js");
+var I = amplitude.I;
+var U = amplitude.U;
+var Amplitude = amplitude.Amplitude;
 var assert = require('assert')
 
 // Add

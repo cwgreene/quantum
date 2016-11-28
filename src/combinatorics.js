@@ -15,3 +15,6 @@ function cartesianProduct(arrays) {
     return result;
 }
 
+module.exports = {
+    cartesianProduct: cartesianProduct
+};

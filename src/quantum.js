@@ -1,4 +1,7 @@
-// depends: amplitude.js, combinatorics.js, utils.js
+var amplitude = require('./amplitude');
+var utils = require('./utils');
+var combinatorics = require('./combinatorics');
+
 // Var Constants
 hbar = 1
 
@@ -11,7 +14,7 @@ var System = function (num_particles, box, potential) {
         }
         preProduct.push(possiblePositions)
     }
-    this.states = cartesianProduct(preProduct);
+    this.states = combinatorics.cartesianProduct(preProduct);
     this.resolution = box.max_resolution;
     this.potential = potential
     this.geometry = box;
@@ -76,19 +79,19 @@ var WaveFunction = StateFunction;
 
 var secondDerivative = function(fx, fx_minus_h, fx_plus_h, dx)  {
     if (typeof(fx) === "number") {
-        fx = new Amplitude(fx, 0);
+        fx = new amplitude.Amplitude(fx, 0);
     }
     if (typeof(fx_minus_h) === "number") {
-        fx_minus_h = new Amplitude(fx_minus_h, 0);
+        fx_minus_h = new amplitude.Amplitude(fx_minus_h, 0);
     }
     if (typeof(fx_plus_h) === "number") {
-        fx_plus_h = new Amplitude(fx_plus_h, 0);
+        fx_plus_h = new amplitude.Amplitude(fx_plus_h, 0);
     }
     // [ f(x+h) - 2f(x) + f(x-h) ]/ dx^2
     return fx_minus_h.add(fx.multiply(-2)).add(fx_plus_h).multiply(1/(dx*dx))
 }
 
-var Hamiltonian = function (System) {
+var Hamiltonian = function (system) {
     // `StateFunction.apply(this, [system.states]); // I have no idea what this is supposed to do.
     this.system = system; // Grab potential and resolution.
 }
@@ -105,9 +108,9 @@ Hamiltonian.prototype.update = function(wavefunction) {
             // They refer to the state in the which have the current particle moved -dx and +dx
             // respectively. If these states are not in set of states, they are assumed to be boundary states
             // and thus will have amplitude of zero.
-            var prev_state = ArrayUtils.addedIndex(state, particle_id, -1);
+            var prev_state = utils.ArrayUtils.addedIndex(state, particle_id, -1);
             var previous_state_amplitude = wavefunction.get(prev_state);
-            var next_state = ArrayUtils.addedIndex(state, particle_id, 1);
+            var next_state = utils.ArrayUtils.addedIndex(state, particle_id, 1);
             var next_state_amplitude = wavefunction.states.get(next_state);
 
             // TODO: Correct solution for this.states.resolution. Currently, I'm cheating.
@@ -136,3 +139,10 @@ function schroedingerStep(wavefunction, system) {
 
     return nextWaveFunction
 }
+
+module.exports = {
+    System: System,
+    Hamiltonian: Hamiltonian,
+    secondDerivative: secondDerivative,
+    StateFunction: StateFunction
+};

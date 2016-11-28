@@ -1,3 +1,10 @@
+var assert = require('assert');
+var quantum = require('../src/quantum');
+var amplitude = require('../src/amplitude');
+var Amplitude = amplitude.Amplitude;
+var System = quantum.System;
+var Hamiltonian = quantum.Hamiltonian;
+var secondDerivative = quantum.secondDerivative;
 /* One Dimensional System */
 var box = {
     "max_resolution" : 10,
@@ -27,7 +34,7 @@ assert(secondDerivative(new Amplitude(Math.cos(0), 0),
 
 // Initial testing, need to flesh out more. Namely, these will fail
 // once wavefunction normalizes things properly.
-var wavefunction = new StateFunction([[[0,0], 1], [[0,1], 1], [[1,0], 1], [[1,1], 1]])
+var wavefunction = new quantum.StateFunction([[[0,0], 1], [[0,1], 1], [[1,0], 1], [[1,1], 1]])
 assert(wavefunction.get([0,0]) == 1)
 assert(wavefunction.get([0,1]) == 1)
 assert(wavefunction.get([1,0]) == 1)
