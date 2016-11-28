@@ -44,3 +44,21 @@ I have seen some mathematical arguments as to why this is the case,
 but would like to break them down into something that could be
 simulated on a computer.
 
+## Potentials
+
+Potentials are kind of a weird thing in standard QM. Fundamentally, potential energy is the way we assert
+"There is energy inherent in this specific configuration of the system." As a result, it's a function of
+configuration. The wacky thing is that this allows us to dramatically simplify our Hamiltonians in certain
+situations. In two states systems, we can adopt the center of mass frame so that what would have been
+a two dimensional wave function. This trick also allows us to talk about a wide range of phenomenon. Don't
+want to talk about photons? No problem! Focus on the electron, and just toss the energy
+
+A key aspsect of the hamiltonian is that it, unlike the Lagrangian, it doesn't care if energy is potential
+or kinetic, it just cares about the total. So ignoring kinetic energy associated with the photon and
+treating it as 'potential' energy is A-OK as far as time evolution is concerned.
+
+Again, this works because since we're not treating the photons as particles (rather, as just a background
+energy thing, like the proton in the central potential) we don't have to worry about it's ill defined mass.
+
+Likely, this suggests that there are higher order energy terms that the potential doesn't represent correctly,
+but hey, as we discussed previously, those terms start small and stay small. :)

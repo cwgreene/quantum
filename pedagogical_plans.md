@@ -30,3 +30,4 @@ So to present in a clear way Quantum Mechanics, we adopt the following:
     this actually works in practice. Some explanations seem to presuppose
     that thermodynamics happens, and it gets bolted into the system. If
     this is a necessary assumption, I want to call that out.
+
