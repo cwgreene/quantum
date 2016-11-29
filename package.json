@@ -1,0 +1,23 @@
+{
+  "name": "quantum",
+  "version": "1.0.0",
+  "description": "Library and tutorial for quantum mechanics.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cwgreene/quantum.git"
+  },
+  "author": "cwgreene",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cwgreene/quantum/issues"
+  },
+  "homepage": "https://github.com/cwgreene/quantum#readme",
+  "devDependencies": {
+    "istanbul": "^0.4.5",
+    "typescript": "^2.0.10"
+  }
+}

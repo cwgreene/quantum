@@ -16,5 +16,5 @@ for filename in os.listdir("tst/"):
     if "unittest" in filename:
         coverage_dir = "build/%s_coverage" % filename
         coverage_file = "build/%s/coverage.json" % coverage_dir
-        subprocess.check_call(["istanbul", "cover", "tst/%s" % (filename), "--dir", coverage_dir])
-        subprocess.check_call(["istanbul", "report", "html", "--dir", coverage_dir, "--include", coverage_file])
+        subprocess.check_call(["node_modules/.bin/istanbul", "cover", "tst/%s" % (filename), "--dir", coverage_dir])
+        subprocess.check_call(["node_modules/.bin/istanbul", "report", "html", "--dir", coverage_dir, "--include", coverage_file])
