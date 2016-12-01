@@ -1,4 +1,4 @@
-var combinatorics = require('../src/combinatorics.js');
+var combinatorics = require('../src/combinatorics.js').default;
 var cartesianProduct = combinatorics.cartesianProduct;
 var assert = require("assert")
 

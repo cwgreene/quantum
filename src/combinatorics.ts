@@ -15,6 +15,6 @@ function cartesianProduct(arrays) {
     return result;
 }
 
-export = {
+export default {
     cartesianProduct: cartesianProduct
 };

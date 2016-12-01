@@ -1,7 +1,9 @@
 "use strict";
-require('./amplitude');
-require('./utils');
-require('./combinatorics');
+var amplitude_1 = require('./amplitude');
+var utils_1 = require('./utils');
+var combinatorics_1 = require('./combinatorics');
+var I = amplitude_1["default"].I;
+var Amplitude = amplitude_1["default"].Amplitude;
 // Var Constants
 var hbar = 1;
 var System = function (num_particles, box, potential) {
@@ -13,7 +15,7 @@ var System = function (num_particles, box, potential) {
         }
         preProduct.push(possiblePositions);
     }
-    this.states = cartesianProduct(preProduct);
+    this.states = combinatorics_1["default"].cartesianProduct(preProduct);
     this.resolution = box.max_resolution;
     this.potential = potential;
     this.geometry = box;
@@ -68,13 +70,13 @@ StateFunction.prototype.set = function (state, amplitude) {
 var WaveFunction = StateFunction;
 var secondDerivative = function (fx, fx_minus_h, fx_plus_h, dx) {
     if (typeof (fx) === "number") {
-        fx = new amplitude.Amplitude(fx, 0);
+        fx = new amplitude_1["default"].Amplitude(fx, 0);
     }
     if (typeof (fx_minus_h) === "number") {
-        fx_minus_h = new amplitude.Amplitude(fx_minus_h, 0);
+        fx_minus_h = new amplitude_1["default"].Amplitude(fx_minus_h, 0);
     }
     if (typeof (fx_plus_h) === "number") {
-        fx_plus_h = new amplitude.Amplitude(fx_plus_h, 0);
+        fx_plus_h = new amplitude_1["default"].Amplitude(fx_plus_h, 0);
     }
     // [ f(x+h) - 2f(x) + f(x-h) ]/ dx^2
     return fx_minus_h.add(fx.multiply(-2)).add(fx_plus_h).multiply(1 / (dx * dx));
@@ -96,14 +98,17 @@ Hamiltonian.prototype.update = function (wavefunction) {
             // respectively. If these states are not in set of states, they are assumed to be boundary states
             // and thus will have amplitude of zero.
             // TODO: This seems to only make sense when our system is in one dimension. :(
-            var prev_state = utils.ArrayUtils.addedIndex(state, particle_id, -1);
+            var prev_state = utils_1["default"].ArrayUtils.addedIndex(state, particle_id, -1);
             var previous_state_amplitude = wavefunction.get(prev_state);
-            var next_state = utils.ArrayUtils.addedIndex(state, particle_id, 1);
+            var next_state = utils_1["default"].ArrayUtils.addedIndex(state, particle_id, 1);
             var next_state_amplitude = wavefunction.states.get(next_state);
             // TODO: Correct solution for this.states.resolution. Currently, I'm cheating.
             // Compute Energy Amplitude Terms
-            var kineticAmplitude = (-hbar / (particle.mass * 2)) *
-                secondDerivative(this_state_amplitude, previous_state_amplitude, next_state_amplitude, 1 / this.system.resolution);
+            var kineticAmplitude = new Amplitude((-hbar / (particle.mass * 2)) *
+                secondDerivative(this_state_amplitude, previous_state_amplitude, next_state_amplitude, 1 / this.system.resolution), 0);
+            // TODO: Figure out what this variable center_state_amplitude
+            // was supposed to be.
+            var center_state_amplitude = new Amplitude(0, 0);
             var potentialAmplitude = center_state_amplitude.multiply(this.system.potential(state)); // V(x)*Psi(x)
             // H = K + V
             this.set(state, kineticAmplitude.add(potentialAmplitude));
@@ -113,18 +118,20 @@ Hamiltonian.prototype.update = function (wavefunction) {
 // Time Step evolution of the system
 // Should probably be a method on System.
 function schroedingerStep(wavefunction, system) {
-    nextWaveFunction = new WaveFunction(state);
+    var nextWaveFunction = new WaveFunction(state);
+    var hamiltonian = system.hamiltonian;
     hamiltonian.update(wavefunction);
     // Go over all interior states (boundary states never change, they're always zero)
     for (var i = 0; i < wavefunction.states.length; i++) {
-        var state = states[i];
+        var state = system.states[i];
         var amplitude = wavefunction.getAmplitude(state);
         var nextAmplitude = amplitude.add(I.multiply(-1 / hbar).multiply(hamiltonian.get(state)));
         nextWaveFunction.set(state, nextAmplitude);
     }
     return nextWaveFunction;
 }
-module.exports = {
+exports.__esModule = true;
+exports["default"] = {
     // The core objects here are the System
     // and the Hamiltonian.
     System: System,

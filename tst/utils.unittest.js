@@ -1,4 +1,4 @@
-var utils = require('../src/utils.js');
+var utils = require('../src/utils.js').default;
 var ArrayUtils = utils.ArrayUtils;
 var assert = require('assert');
 

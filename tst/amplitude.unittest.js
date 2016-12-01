@@ -1,5 +1,5 @@
 // Unit Tests
-var amplitude = require("../src/amplitude.js");
+var amplitude = require("../src/amplitude.js").default;
 var I = amplitude.I;
 var U = amplitude.U;
 var Amplitude = amplitude.Amplitude;

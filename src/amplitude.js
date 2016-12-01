@@ -75,7 +75,8 @@ Amplitude.prototype.almostEquals = function (amplitude) {
     var diff = this.add(amplitude.multiply(-1));
     return diff.radius() < .0001;
 };
-module.exports = {
+exports.__esModule = true;
+exports["default"] = {
     "I": new Amplitude(0, 1),
     "U": new Amplitude(1, 0),
     "Amplitude": Amplitude

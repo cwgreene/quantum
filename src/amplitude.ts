@@ -82,7 +82,7 @@ Amplitude.prototype.almostEquals = function(amplitude) {
     return diff.radius() < .0001;
 }
 
-export = {
+export default {
     "I": new Amplitude(0,1), // Sqrt(-1)
     "U": new Amplitude(1,0), // Unity
     "Amplitude": Amplitude

@@ -1,6 +1,9 @@
-import './amplitude';
-import './utils';
-import './combinatorics';
+import amplitude from './amplitude';
+import utils from './utils';
+import combinatorics from './combinatorics';
+
+const I = amplitude.I;
+const Amplitude = amplitude.Amplitude;
 
 // Var Constants
 const hbar = 1
@@ -118,8 +121,11 @@ Hamiltonian.prototype.update = function(wavefunction) {
 
             // TODO: Correct solution for this.states.resolution. Currently, I'm cheating.
             // Compute Energy Amplitude Terms
-            var kineticAmplitude = (-hbar/(particle.mass*2)) * 
-                secondDerivative(this_state_amplitude, previous_state_amplitude, next_state_amplitude, 1/this.system.resolution);
+            var kineticAmplitude = new Amplitude((-hbar/(particle.mass*2)) * 
+                secondDerivative(this_state_amplitude, previous_state_amplitude, next_state_amplitude, 1/this.system.resolution), 0);
+            // TODO: Figure out what this variable center_state_amplitude
+            // was supposed to be.
+            const center_state_amplitude = new Amplitude(0,0);
             var potentialAmplitude = center_state_amplitude.multiply(this.system.potential(state)); // V(x)*Psi(x)
 
             // H = K + V
@@ -131,11 +137,12 @@ Hamiltonian.prototype.update = function(wavefunction) {
 // Time Step evolution of the system
 // Should probably be a method on System.
 function schroedingerStep(wavefunction, system) {
-    nextWaveFunction = new WaveFunction(state);
+    let nextWaveFunction = new WaveFunction(state);
+    let hamiltonian = system.hamiltonian;
     hamiltonian.update(wavefunction);
     // Go over all interior states (boundary states never change, they're always zero)
     for(var i = 0; i < wavefunction.states.length; i++) {
-        var state = states[i];
+        var state = system.states[i];
         var amplitude = wavefunction.getAmplitude(state);    
     var nextAmplitude = amplitude.add(I.multiply(-1/hbar).multiply(hamiltonian.get(state)));
         nextWaveFunction.set(state, nextAmplitude);
@@ -144,7 +151,7 @@ function schroedingerStep(wavefunction, system) {
     return nextWaveFunction
 }
 
-export = {
+export default {
     // The core objects here are the System
     // and the Hamiltonian.
     System: System,

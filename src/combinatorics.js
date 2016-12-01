@@ -15,6 +15,7 @@ function cartesianProduct(arrays) {
     }
     return result;
 }
-module.exports = {
+exports.__esModule = true;
+exports["default"] = {
     cartesianProduct: cartesianProduct
 };
