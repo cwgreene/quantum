@@ -1,87 +1,90 @@
-var Amplitude = function(real, imag) {
-    this.real = real;
-    this.imag = imag;
-}
-
-Amplitude.prototype.add = function(amplitude) {
-    var newAmplitude = new Amplitude(0,0);
-    if (typeof(amplitude) === "number") {
-        newAmplitude.real = this.real + amplitude;
-        newAmplitude.imag = this.imag;
-    } else {
-        newAmplitude.real = this.real + amplitude.real;
-        newAmplitude.imag = this.imag + amplitude.imag;
+class Amplitude {
+    real : number;
+    imag : number;
+    constructor(real, imag) {
+        this.real = real;
+        this.imag = imag;
     }
-    return newAmplitude;
-}
 
-Amplitude.prototype.multiply = function(amplitude) {
-    var newAmplitude = new Amplitude(0,0);
-    if(typeof(amplitude) === "number") {
-        newAmplitude.real = this.real * amplitude;
-        newAmplitude.imag = this.imag * amplitude;
-    } else {
-        newAmplitude.real = this.real*amplitude.real - this.imag*amplitude.imag;
-        newAmplitude.imag = this.imag*amplitude.real + amplitude.imag*this.real;
+    add(amplitude: Amplitude | number) : Amplitude {
+        var newAmplitude = new Amplitude(0,0);
+        if (typeof(amplitude) === "number") {
+            newAmplitude.real = this.real + amplitude;
+            newAmplitude.imag = this.imag;
+        } else {
+            newAmplitude.real = this.real + amplitude.real;
+            newAmplitude.imag = this.imag + amplitude.imag;
+        }
+        return newAmplitude;
     }
-    return newAmplitude;
-}
 
-Amplitude.prototype.equals = function(amplitude) {
-    if(typeof(amplitude) === "number") {
-        return this.real == amplitude && this.imag == 0
+    multiply(amplitude: Amplitude | number) : Amplitude {
+        var newAmplitude = new Amplitude(0,0);
+        if(typeof(amplitude) === "number") {
+            newAmplitude.real = this.real * amplitude;
+            newAmplitude.imag = this.imag * amplitude;
+        } else {
+            newAmplitude.real = this.real*amplitude.real - this.imag*amplitude.imag;
+            newAmplitude.imag = this.imag*amplitude.real + amplitude.imag*this.real;
+        }
+        return newAmplitude;
     }
-    return this.real == amplitude.real && this.imag == amplitude.imag;
-}
 
-Amplitude.prototype.angle = function() {
-    var atan = Math.atan(this.imag/this.real);
-    if (this.real < 0 && this.imag > 0) {
-        return atan + Math.PI;
-    } else if (this.real < 0) { // Third quadrant
-        return atan + Math.PI;
-    } else if (this.real > 0 && this.imag < 0) {
-        return atan + 2*Math.PI;
+    equals(amplitude : Amplitude | number) : boolean {
+        if(typeof(amplitude) === "number") {
+            return this.real == amplitude && this.imag == 0
+        }
+        return this.real == amplitude.real && this.imag == amplitude.imag;
     }
-    return atan; // first quadrant
-}
 
-Amplitude.prototype.conj = function() {
-    return new Amplitude(this.real, -this.imag);
-}
-
-Amplitude.prototype.inverse = function() {
-    var r = this.radius();
-    var r2 = r*r;
-    return new Amplitude(this.real/r2, -this.imag/r2);
-}
-
-Amplitude.prototype.radius = function() {
-    return Math.sqrt(this.real*this.real + this.imag*this.imag);
-}
-
-Amplitude.prototype.exponentiate = function(amplitude) {
-    if (typeof(amplitude) === "number") {
-        var amplitude = new Amplitude(amplitude, 0);
+    angle() : number {
+        var atan = Math.atan(this.imag/this.real);
+        if (this.real < 0 && this.imag > 0) {
+            return atan + Math.PI;
+        } else if (this.real < 0) { // Third quadrant
+            return atan + Math.PI;
+        } else if (this.real > 0 && this.imag < 0) {
+            return atan + 2*Math.PI;
+        }
+        return atan; // first quadrant
     }
-    var this_r = this.radius();
-    var this_theta = this.angle();
-    var theta = amplitude.real * this_theta;
-    var r = this_r * Math.exp(-this_theta*amplitude.imag)
-    var newAmplitude = (new Amplitude(
-            r*Math.cos(theta),
-            r*Math.sin(theta)));
-    return newAmplitude;
-}
 
-Amplitude.prototype.almostEquals = function(amplitude) {
-    if (typeof(amplitude) === "number") {
-        amplitude = new Amplitude(amplitude, 0);
+    conj() : Amplitude {
+        return new Amplitude(this.real, -this.imag);
     }
-    var diff = this.add(amplitude.multiply(-1));
-    return diff.radius() < .0001;
-}
 
+    inverse() : Amplitude {
+        var r = this.radius();
+        var r2 = r*r;
+        return new Amplitude(this.real/r2, -this.imag/r2);
+    }
+
+    radius() : number {
+        return Math.sqrt(this.real*this.real + this.imag*this.imag);
+    }
+
+    exponentiate(amplitude : number | Amplitude) : Amplitude {
+        if (typeof(amplitude) === "number") {
+            amplitude = new Amplitude(amplitude, 0);
+        }
+        var this_r = this.radius();
+        var this_theta = this.angle();
+        var theta = amplitude.real * this_theta;
+        var r = this_r * Math.exp(-this_theta*amplitude.imag)
+        var newAmplitude = (new Amplitude(
+                r*Math.cos(theta),
+                r*Math.sin(theta)));
+        return newAmplitude;
+    }
+
+    almostEquals(amplitude : number | Amplitude) : boolean {
+        if (typeof(amplitude) === "number") {
+            amplitude = new Amplitude(amplitude, 0);
+        }
+        var diff = this.add(amplitude.multiply(-1));
+        return diff.radius() < .0001;
+    }
+}
 export default {
     "I": new Amplitude(0,1), // Sqrt(-1)
     "U": new Amplitude(1,0), // Unity
