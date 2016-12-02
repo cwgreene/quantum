@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/cwgreene/quantum#readme",
   "devDependencies": {
+    "gulp": "^3.9.1",
     "istanbul": "^0.4.5",
     "typescript": "^2.0.10"
   }

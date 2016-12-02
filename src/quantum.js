@@ -140,3 +140,4 @@ exports["default"] = {
     StateFunction: StateFunction,
     schroedingerStep: schroedingerStep // Make this a method on System
 };
+//# sourceMappingURL=quantum.js.map

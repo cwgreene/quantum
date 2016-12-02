@@ -19,3 +19,4 @@ exports.__esModule = true;
 exports["default"] = {
     cartesianProduct: cartesianProduct
 };
+//# sourceMappingURL=combinatorics.js.map

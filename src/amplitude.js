@@ -84,3 +84,4 @@ exports["default"] = {
     "U": new Amplitude(1, 0),
     "Amplitude": Amplitude
 };
+//# sourceMappingURL=amplitude.js.map
